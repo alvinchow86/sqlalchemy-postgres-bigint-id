@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+flake8 = "~=3.6.0"
+pytest = "~=4.0"
+pytest-mock = "~=1.10"
+pytest-cov = "~=2.6.1"
+psycopg2-binary = "~=2.8.4"
+alembic = "~=1.0.8"
+coverage-badge = "==0.2.0"
+
+[packages]
+sqlalchemy = ">=1.2"
+python-dateutil = ">=2.7"
+
+[requires]
+python_version = "3.7"

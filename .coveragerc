@@ -1,0 +1,3 @@
+[run]
+omit =
+  sqlalchemy_bigid/version.py

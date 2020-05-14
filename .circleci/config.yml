@@ -1,0 +1,51 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/app
+    docker:
+      - image: circleci/python:3.7.0 # every job must define an image for the docker executor and subsequent jobs may define a different image.
+        environment:
+         PIPENV_VENV_IN_PROJECT: true
+         DATABASE_URL: postgres://root:@localhost/sqlalchemy_test
+
+      - image: circleci/postgres:11-alpine-ram
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: sqlalchemy_test
+
+    steps:
+      - checkout  # checkout source code to working directory
+      - run:
+          name: Install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Wait for Postgres
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - restore_cache:
+          keys:
+            - pip-packages-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - pip-packages-v1-{{ .Branch }}-
+            - pip-packages-v1-
+      - run:
+          name: Install dependencies
+          command: |
+            sudo pip install pipenv
+            pipenv sync --dev
+      - save_cache:
+          paths:
+            - ~/app/.venv
+          key: pip-packages-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: Linting
+          command:
+            pipenv run flake8
+      - run:
+          name: Run tests
+          command: |
+            pipenv run python runtests.py --coverage
+            pipenv run coverage-badge -o coverage.svg
+
+      - store_artifacts:
+          path: ~/app/coverage.svg
