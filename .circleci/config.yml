@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/app
     docker:
-      - image: circleci/python:3.7.0 # every job must define an image for the docker executor and subsequent jobs may define a different image.
+      - image: circleci/python:3.8.3 # every job must define an image for the docker executor and subsequent jobs may define a different image.
         environment:
          PIPENV_VENV_IN_PROJECT: true
          DATABASE_URL: postgres://root:@localhost/sqlalchemy_test
@@ -45,7 +45,3 @@ jobs:
           name: Run tests
           command: |
             pipenv run python runtests.py --coverage
-            pipenv run coverage-badge -o coverage.svg
-
-      - store_artifacts:
-          path: ~/app/coverage.svg
