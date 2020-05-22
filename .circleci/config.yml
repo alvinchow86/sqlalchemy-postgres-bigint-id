@@ -25,9 +25,9 @@ jobs:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - restore_cache:
           keys:
-            - pip-packages-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-            - pip-packages-v1-{{ .Branch }}-
-            - pip-packages-v1-
+            - pip-packages-v2-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - pip-packages-v2-{{ .Branch }}-
+            - pip-packages-v2-
       - run:
           name: Install dependencies
           command: |
@@ -36,7 +36,7 @@ jobs:
       - save_cache:
           paths:
             - ~/app/.venv
-          key: pip-packages-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          key: pip-packages-v2-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           name: Linting
           command:
