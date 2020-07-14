@@ -64,17 +64,15 @@ def generate_nextbigid_sql_for_table(table):
 
 
 def generate_nextbigid_sql(table_name, column_name):
+    column = column_name
+    table = table_name
     if table_name in RESERVED_KEYWORDS:
         # if using a reserved word, need parentheses
-        sql = """ALTER TABLE "{table_name}" ALTER COLUMN {column} set default nextbigid('{table_name}_{column}_seq')""".format(
-            table_name=table_name,
-            column=column_name
-        )
+        sql = f"""
+ALTER TABLE "{table}" ALTER COLUMN {column} set default nextbigid('{table}_{column}_seq')
+""".strip()
     else:
-        sql = "ALTER TABLE {table} ALTER COLUMN {column} set default nextbigid('{table}_{column}_seq')".format(
-            table=table_name,
-            column=column_name,
-        )
+        sql = f"ALTER TABLE {table} ALTER COLUMN {column} set default nextbigid('{table}_{column}_seq')"
     return sql
 
 
