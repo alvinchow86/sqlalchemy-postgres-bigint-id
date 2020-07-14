@@ -4,6 +4,12 @@ from sqlalchemy_bigid.utils import get_bigid_column_from_table
 from sqlalchemy_bigid import config
 
 
+RESERVED_KEYWORDS = (
+    'user',
+    'check',
+)
+
+
 def get_nextbigid_function_text():
     """
     Generate the Postgres function text for the nextbigid() function
@@ -58,9 +64,10 @@ def generate_nextbigid_sql_for_table(table):
 
 
 def generate_nextbigid_sql(table_name, column_name):
-    if table_name == 'user':
-        # user is a reserved word, need parentheses
-        sql = """ALTER TABLE "user" ALTER COLUMN {column} set default nextbigid('user_{column}_seq')""".format(
+    if table_name in RESERVED_KEYWORDS:
+        # if using a reserved word, need parentheses
+        sql = """ALTER TABLE "{table_name}" ALTER COLUMN {column} set default nextbigid('{table_name}_{column}_seq')""".format(
+            table_name=table_name,
             column=column_name
         )
     else:
