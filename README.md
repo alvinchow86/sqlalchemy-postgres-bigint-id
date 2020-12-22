@@ -38,9 +38,9 @@ This epoch time should be set and defined once, and never changed again.
 
 Add this code something in your application initial setup.
 ```python
-BIGID_EPOCH_SECONDS = 1589674264    # this is 1/1/2020 <-- this is just a sample, choose your own time
+BIG_INTEGER_ID_EPOCH_SECONDS = 1589674264    # this is 1/1/2020 <-- this is just a sample, choose your own time
 
-sqlalchemy_bigint_id.configure(epoch_seconds=BIGID_EPOCH_SECONDS)
+sqlalchemy_bigint_id.configure(epoch_seconds=BIG_INTEGER_ID_EPOCH_SECONDS)
 ```
 
 ### 2. Register postgres functions

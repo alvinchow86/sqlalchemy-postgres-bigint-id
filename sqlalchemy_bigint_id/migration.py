@@ -35,41 +35,41 @@ def create_table(context, revision, op):
 
 
 @Operations.register_operation("create_nextbigid_function")
-class CreateNextBigIdFunctionOp(MigrateOperation):
+class CreateNextBigIntegerIdFunctionOp(MigrateOperation):
     @classmethod
     def create_nextbigid_function(cls, operations, **kw):
-        op = CreateNextBigIdFunctionOp(**kw)
+        op = CreateNextBigIntegerIdFunctionOp(**kw)
         return operations.invoke(op)
 
     def reverse(self):
-        return DropNextBigIdFunctionOp()
+        return DropNextBigIntegerIdFunctionOp()
 
 
 @Operations.register_operation("drop_nextbigid_function")
-class DropNextBigIdFunctionOp(MigrateOperation):
+class DropNextBigIntegerIdFunctionOp(MigrateOperation):
     @classmethod
     def drop_nextbigid_function(cls, operations, **kw):
-        op = DropNextBigIdFunctionOp(**kw)
+        op = DropNextBigIntegerIdFunctionOp(**kw)
         return operations.invoke(op)
 
 
-@Operations.implementation_for(CreateNextBigIdFunctionOp)
+@Operations.implementation_for(CreateNextBigIntegerIdFunctionOp)
 def create_nextbigid_function(operations, operation):
     function_text = get_nextbigid_function_text()
     operations.execute(DDL(function_text))
 
 
-@Operations.implementation_for(DropNextBigIdFunctionOp)
+@Operations.implementation_for(DropNextBigIntegerIdFunctionOp)
 def drop_nextbigid_function(operations, operation):
     operations.execute('drop function nextbigid')
 
 
-@renderers.dispatch_for(CreateNextBigIdFunctionOp)
+@renderers.dispatch_for(CreateNextBigIntegerIdFunctionOp)
 def render_create_nextbigid_function(autogen_context, op):
     return "op.create_nextbigid_function()"
 
 
-@renderers.dispatch_for(DropNextBigIdFunctionOp)
+@renderers.dispatch_for(DropNextBigIntegerIdFunctionOp)
 def render_drop_nextbigid_function(autogen_context, op):
     return "op.drop_nextbigid_function()"
 
@@ -89,5 +89,5 @@ def compare_sequences(autogen_context, upgrade_ops, schemas):
 
     if is_initial_migration:
         print('Initial migration detected, no tables yet')
-        nextbigid_op = CreateNextBigIdFunctionOp()
+        nextbigid_op = CreateNextBigIntegerIdFunctionOp()
         upgrade_ops.ops.insert(0, nextbigid_op)

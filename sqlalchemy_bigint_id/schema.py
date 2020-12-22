@@ -1,6 +1,6 @@
 from sqlalchemy import DDL, event
 
-from sqlalchemy_bigint_id.utils import get_bigid_column_from_table
+from sqlalchemy_bigint_id.utils import get_bigint_id_column_from_table
 from sqlalchemy_bigint_id import config
 
 
@@ -21,7 +21,7 @@ def get_nextbigid_function_text():
     epoch_milliseconds = epoch_seconds * 1000
 
     create_nextbigid_function_text = f"""
-        CREATE OR REPLACE FUNCTION nextbigid(seq_name text, OUT result bigint) AS $$
+        CREATE OR REPLACE FUNCTION nextbigintid(seq_name text, OUT result bigint) AS $$
         DECLARE
             our_epoch bigint := {epoch_milliseconds};
             seq_id bigint;
@@ -56,9 +56,9 @@ def register_nextbigid_function(metadata):
 
 def generate_nextbigid_sql_for_table(table):
     """
-    If a Table has a BigIntegerID column, return the Alter table SQL to use nextbigid()
+    If a Table has a BigID column, return the Alter table SQL to use nextbigid()
     """
-    bigid_column = get_bigid_column_from_table(table)
+    bigid_column = get_bigint_id_column_from_table(table)
     if bigid_column is not None:
         return generate_nextbigid_sql(table.name, bigid_column.key)
 

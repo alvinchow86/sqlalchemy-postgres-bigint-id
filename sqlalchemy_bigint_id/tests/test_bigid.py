@@ -11,7 +11,7 @@ from alembic.operations import Operations, ops
 from sqlalchemy_bigint_id.schema import (
     register_nextbigid_function, generate_nextbigid_sql_for_table, setup_bigid_for_all_tables
 )
-from sqlalchemy_bigint_id.migration import CreateNextBigIdFunctionOp, DropNextBigIdFunctionOp
+from sqlalchemy_bigint_id.migration import CreateNextBigIntegerIdFunctionOp, DropNextBigIntegerIdFunctionOp
 from sqlalchemy_bigint_id.utils import get_bigid_column_from_table
 from sqlalchemy_bigint_id.types import BigIntegerID
 
@@ -90,12 +90,12 @@ def test_alembic_autogenerate_nextbigid(Foo, connection, Base, engine):
     )
     migration_script = produce_migrations(context, Base.metadata)
     first_upgrade_op = migration_script.upgrade_ops.ops[0]
-    assert isinstance(first_upgrade_op, CreateNextBigIdFunctionOp)
+    assert isinstance(first_upgrade_op, CreateNextBigIntegerIdFunctionOp)
 
 
 def test_alembic_render_bigid_function_ops():
-    upgrade_code = render_python_code(ops.UpgradeOps(ops=[CreateNextBigIdFunctionOp()]))
-    downgrade_code = render_python_code(ops.DowngradeOps(ops=[DropNextBigIdFunctionOp()]))
+    upgrade_code = render_python_code(ops.UpgradeOps(ops=[CreateNextBigIntegerIdFunctionOp()]))
+    downgrade_code = render_python_code(ops.DowngradeOps(ops=[DropNextBigIntegerIdFunctionOp()]))
     assert 'op.create_nextbigid_function()' in upgrade_code
     assert 'op.drop_nextbigid_function()' in downgrade_code
 
