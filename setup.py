@@ -1,13 +1,20 @@
+from os import path
 from setuptools import setup
 
 # get version
 __version__ = None
 exec(open('sqlalchemy_bigid/version.py').read())
 
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md')) as f:
+    long_description = f.read()
+
 setup(
     name='sqlalchemy-postgres-bigid',
     version=__version__,
-    description="SQLAlchemy Postgres Big Integer ID",
+    description="SQLAlchemy-Postgres-BigID",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/alvinchow86/sqlalchemy-postgres-bigid',
     author='Alvin Chow',
     author_email='alvinchow86@gmail.com',
