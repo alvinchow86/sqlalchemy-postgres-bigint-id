@@ -1,6 +1,6 @@
 # SQLAlchemy Postgres Big Id
 
-This is a library for making it easy to generate 64-bit BIGINT ids for Postgres tables in SQLAlchemy and Alembic. It is targeted for usage of SQLAlchemy ORM.
+This is a library for making it easy to generate 64-bit BIGINT ids for Postgres tables in SQLAlchemy and Alembic. Note that this documentation is targeted for  SQLAlchemy ORM users, but it should also work for general usage. This library will dub this 64-big BIGINT type with special generation "BigID", as this is most likely to be useful for primary IDs.
 
 Install this library once, and never worry about running out of IDs or painful ID type migrations ever again in your application! 
 
@@ -86,6 +86,16 @@ def run_migrations_online():
 
 That's it for the one-time setup!
 
+Now in your SQLAlchemy ORM definitions, just use the custom BigID type. It is identical to the `BigInteger` type, but doing this allows this library to detect cases where you want to register it with the Big ID postgres generation function.
+
+```
+from sqlalchemy_bigid.types import BigID
+
+class Foo(Base):
+    __tablename__ = 'foo'
+    id = Column(BigID, primary_key=True)
+    ...
+```
 
 ## How it Works
 We first create a Postgres function, called `nextbigid()`. It's generated in this Python script. Note that one hardcoded value is the epoch time, which must be set to something. 
@@ -123,10 +133,10 @@ For any new tables, the library adds a custom `op.execute()` statement that alte
 
 ```python
 def upgrade():
-   op.create_table('address', 
+   op.create_table('foo', 
      ...
    )
-   op.execute("ALTER TABLE address ALTER COLUMN id set default nextbigid('address_id_seq')")
+   op.execute("ALTER TABLE foo ALTER COLUMN id set default nextbigid('foo_id_seq')")
 ```
 
 ## Future Improvements
