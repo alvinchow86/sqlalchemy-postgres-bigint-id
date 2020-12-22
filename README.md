@@ -91,7 +91,7 @@ That's it for the one-time setup!
 Now in your SQLAlchemy ORM definitions, just use the custom BigIntegerID type. It is identical to the `BigInteger` type, but doing this allows this library to detect cases where you want to register it with the Big ID postgres generation function.
 
 ```
-from sqlalchemy_bigint_id.types import BigIntegerID
+from sqlalchemy_bigint_id import BigIntegerID
 
 class Foo(Base):
     __tablename__ = 'foo'
