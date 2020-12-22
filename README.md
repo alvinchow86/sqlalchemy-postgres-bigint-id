@@ -1,6 +1,6 @@
 # SQLAlchemy Postgres BigInt IDs
 
-This is a library for making it easy to generate 64-bit BIGINT ids for Postgres tables in SQLAlchemy and Alembic. Note that this documentation is targeted for  SQLAlchemy ORM users, but it should also work for general usage. This library will dub this 64-big BIGINT type with special generation "BigID", as this is most likely to be useful for primary IDs.
+This is a library for making it easy to generate 64-bit BIGINT ids for Postgres tables in SQLAlchemy and Alembic. Note that this documentation is targeted for  SQLAlchemy ORM users, but it should also work for general usage.
 
 Install this library once, and never worry about running out of IDs or painful ID type migrations ever again in your application!
 
@@ -88,14 +88,14 @@ def run_migrations_online():
 
 That's it for the one-time setup!
 
-Now in your SQLAlchemy ORM definitions, just use the custom BigID type. It is identical to the `BigInteger` type, but doing this allows this library to detect cases where you want to register it with the Big ID postgres generation function.
+Now in your SQLAlchemy ORM definitions, just use the custom BigIntegerID type. It is identical to the `BigInteger` type, but doing this allows this library to detect cases where you want to register it with the Big ID postgres generation function.
 
 ```
-from sqlalchemy_bigint_id.types import BigID
+from sqlalchemy_bigint_id.types import BigIntegerID
 
 class Foo(Base):
     __tablename__ = 'foo'
-    id = Column(BigID, primary_key=True)
+    id = Column(BigIntegerID, primary_key=True)
     ...
 ```
 

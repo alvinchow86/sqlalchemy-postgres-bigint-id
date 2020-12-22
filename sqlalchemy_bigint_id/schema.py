@@ -56,7 +56,7 @@ def register_nextbigid_function(metadata):
 
 def generate_nextbigid_sql_for_table(table):
     """
-    If a Table has a BigID column, return the Alter table SQL to use nextbigid()
+    If a Table has a BigIntegerID column, return the Alter table SQL to use nextbigid()
     """
     bigid_column = get_bigid_column_from_table(table)
     if bigid_column is not None:

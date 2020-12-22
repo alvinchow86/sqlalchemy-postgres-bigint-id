@@ -17,7 +17,7 @@ writer = rewriter.Rewriter()
 @writer.rewrites(ops.CreateTableOp)
 def create_table(context, revision, op):
     """
-    Check if there is a BigID column (BigInteger marked as needing nextbigid)
+    Check if there is a BigIntegerID column (BigInteger marked as needing nextbigid)
     and then emit the SQL migration to set the default
     """
     bigid_column = get_bigid_column_from_table(op._orig_table)

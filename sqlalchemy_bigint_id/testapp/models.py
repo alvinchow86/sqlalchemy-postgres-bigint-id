@@ -1,13 +1,13 @@
 from sqlalchemy import Column, Text, Integer
 
 from sqlalchemy_bigint_id.testapp.db import Base
-from sqlalchemy_bigint_id.types import BigID
+from sqlalchemy_bigint_id.types import BigIntegerID
 
 
 class Coin(Base):
     __tablename__ = 'coin'
 
-    id = Column(BigID, primary_key=True)
+    id = Column(BigIntegerID, primary_key=True)
     name = Column(Text)
 
 

@@ -13,14 +13,14 @@ from sqlalchemy_bigint_id.schema import (
 )
 from sqlalchemy_bigint_id.migration import CreateNextBigIdFunctionOp, DropNextBigIdFunctionOp
 from sqlalchemy_bigint_id.utils import get_bigid_column_from_table
-from sqlalchemy_bigint_id.types import BigID
+from sqlalchemy_bigint_id.types import BigIntegerID
 
 
 @pytest.fixture
 def Foo(Base):
     class Foo(Base):
         __tablename__ = 'foo'
-        id = Column(BigID, primary_key=True)
+        id = Column(BigIntegerID, primary_key=True)
         name = Column(Text)
 
     return Foo
@@ -30,7 +30,7 @@ def Foo(Base):
 def User(Base):
     class User(Base):
         __tablename__ = 'user'
-        id = Column(BigID, primary_key=True)
+        id = Column(BigIntegerID, primary_key=True)
         name = Column(Text)
 
     return User
