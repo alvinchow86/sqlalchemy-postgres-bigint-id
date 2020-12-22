@@ -10,9 +10,9 @@ RESERVED_KEYWORDS = (
 )
 
 
-def get_nextbigid_function_text():
+def get_next_bigint_id_function_text():
     """
-    Generate the Postgres function text for the nextbigid() function
+    Generate the Postgres function text for the next_bigint_id() function
     """
     epoch_seconds = config.EPOCH_SECONDS
     if epoch_seconds is None:   # pragma: no cover
@@ -20,8 +20,8 @@ def get_nextbigid_function_text():
 
     epoch_milliseconds = epoch_seconds * 1000
 
-    create_nextbigid_function_text = f"""
-        CREATE OR REPLACE FUNCTION nextbigintid(seq_name text, OUT result bigint) AS $$
+    create_next_bigint_id_function_text = f"""
+        CREATE OR REPLACE FUNCTION next_bigint_id(seq_name text, OUT result bigint) AS $$
         DECLARE
             our_epoch bigint := {epoch_milliseconds};
             seq_id bigint;
@@ -37,53 +37,53 @@ def get_nextbigid_function_text():
         END;
         $$ LANGUAGE PLPGSQL;
         """
-    return create_nextbigid_function_text
+    return create_next_bigint_id_function_text
 
 
-def get_create_nextbigid_function():
-    create_nextbigid_function_text = get_nextbigid_function_text()
-    create_nextbigid_function = DDL(create_nextbigid_function_text)
-    return create_nextbigid_function
+def get_create_next_bigint_id_function():
+    create_next_bigint_id_function_text = get_next_bigint_id_function_text()
+    create_next_bigint_id_function = DDL(create_next_bigint_id_function_text)
+    return create_next_bigint_id_function
 
 
-def register_nextbigid_function(metadata):
+def register_next_bigint_id_function(metadata):
     """
-    Create the nextbigid function on initial table creation (mostly for dev)
+    Create the next_bigint_id function on initial table creation (mostly for dev)
     """
-    create_nextbigid_function = get_create_nextbigid_function()
-    event.listen(metadata, 'before_create', create_nextbigid_function)
+    create_next_bigint_id_function = get_create_next_bigint_id_function()
+    event.listen(metadata, 'before_create', create_next_bigint_id_function)
 
 
-def generate_nextbigid_sql_for_table(table):
+def generate_next_bigint_id_sql_for_table(table):
     """
-    If a Table has a BigID column, return the Alter table SQL to use nextbigid()
+    If a Table has a BigIntegerId column, return the Alter table SQL to use next_bigint_id()
     """
-    bigid_column = get_bigint_id_column_from_table(table)
-    if bigid_column is not None:
-        return generate_nextbigid_sql(table.name, bigid_column.key)
+    bigint_id_column = get_bigint_id_column_from_table(table)
+    if bigint_id_column is not None:
+        return generate_next_bigint_id_sql(table.name, bigint_id_column.key)
 
 
-def generate_nextbigid_sql(table_name, column_name):
+def generate_next_bigint_id_sql(table_name, column_name):
     column = column_name
     table = table_name
     if table_name in RESERVED_KEYWORDS:
         # if using a reserved word, need parentheses
         sql = f"""
-ALTER TABLE "{table}" ALTER COLUMN {column} set default nextbigid('{table}_{column}_seq')
+ALTER TABLE "{table}" ALTER COLUMN {column} set default next_bigint_id('{table}_{column}_seq')
 """.strip()
     else:
-        sql = f"ALTER TABLE {table} ALTER COLUMN {column} set default nextbigid('{table}_{column}_seq')"
+        sql = f"ALTER TABLE {table} ALTER COLUMN {column} set default next_bigint_id('{table}_{column}_seq')"
     return sql
 
 
-def setup_bigid_for_all_tables(metadata):
+def setup_bitint_id_for_all_tables(metadata):
     """
     This is more for Base.create_all() usage than for migrations, but still important for that flow.
     Alembic migrations have a different flow
     """
     tables = metadata.sorted_tables
     for table in tables:
-        nextbigid_sql = generate_nextbigid_sql_for_table(table)
-        if nextbigid_sql:
-            alter_table_bigid = DDL(nextbigid_sql)
-            event.listen(table, 'after_create', alter_table_bigid)
+        next_bigint_id_sql = generate_next_bigint_id_sql_for_table(table)
+        if next_bigint_id_sql:
+            alter_table_bitint_id = DDL(next_bigint_id_sql)
+            event.listen(table, 'after_create', alter_table_bitint_id)

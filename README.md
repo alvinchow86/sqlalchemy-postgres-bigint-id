@@ -46,10 +46,10 @@ sqlalchemy_bigint_id.configure(epoch_seconds=BIG_INTEGER_ID_EPOCH_SECONDS)
 ### 2. Register postgres functions
 Call `sqlalchemy_bigint_id.register_postgres_functions()` with your `Base.metadata`. A good place to do this is whereever you are doing your initial SQLAlchemy database setup and engine/session creation.
 ```python
-from sqlalchemy_bigint_id import register_nextbigid_function
+from sqlalchemy_bigint_id import register_next_bigint_id_function
 
 Base = declarative_base()
-register_nextbigid_function(metadata=Base.metadata)
+register_next_bigint_id_function(metadata=Base.metadata)
 ```
 
 Note that this really only matters when you are doing something like `Base.metadata.create_all(engine)`, which you likely will only do for local dev and testing
@@ -102,13 +102,13 @@ class Foo(Base):
 ## How it Works
 This section is optional reading, but worth looking at if you'd like to know what's going on underneath the hood. Ultimately it's not really that much, at the end of day it's purely a convenience layer.
 
-The library first create a Postgres function, called `nextbigid()`. It's generated in this Python script. Note that one hardcoded value is the epoch time, which must be set to something.
+The library first create a Postgres function, called `next_bigint_id()`. It's generated in this Python script. Note that one hardcoded value is the epoch time, which must be set to something.
 
 The function itself takes one argument, which is the name of the sequence for your table. This is an improvement over the function in existing articles I've seen, in that we can reuse one Postgres function instead of writing a new one for every table.
 
 ```
- create_nextbigid_function_text = f"""
-     CREATE OR REPLACE FUNCTION nextbigid(seq_name text, OUT result bigint) AS $$
+ create_next_bigint_id_function_text = f"""
+     CREATE OR REPLACE FUNCTION next_bigint_id(seq_name text, OUT result bigint) AS $$
      DECLARE
          our_epoch bigint := {epoch_milliseconds};
          seq_id bigint;
@@ -126,21 +126,21 @@ The function itself takes one argument, which is the name of the sequence for yo
  """
 ```
 
-Your "initial" migration will have this at the top, which generates the "nextbigid" function via a custom Alembic hook
+Your "initial" migration will have this at the top, which generates the "next_bigint_id" function via a custom Alembic hook
 ```python
 def upgrade():
-   op.create_nextbigid_function()
+   op.create_next_bigint_id_function()
    ...
 ```
 
-For any new tables, the library adds a custom `op.execute()` statement that alters the column to use the nextbigid() postgres function for thr default value.
+For any new tables, the library adds a custom `op.execute()` statement that alters the column to use the next_bigint_id() postgres function for thr default value.
 
 ```python
 def upgrade():
    op.create_table('foo',
      ...
    )
-   op.execute("ALTER TABLE foo ALTER COLUMN id set default nextbigid('foo_id_seq')")
+   op.execute("ALTER TABLE foo ALTER COLUMN id set default next_bigint_id('foo_id_seq')")
 ```
 
 ## Future Improvements
