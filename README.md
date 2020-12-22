@@ -1,6 +1,8 @@
 # SQLAlchemy Postgres Big Id
 
-This is a library for making it easy to generate 64-bit BIGINT ids for Postgres tables in SQLAlchemy and Alembic.
+This is a library for making it easy to generate 64-bit BIGINT ids for Postgres tables in SQLAlchemy and Alembic. It is targeted for usage of SQLAlchemy ORM.
+
+Install this library once, and never worry about running out of IDs or painful ID type migrations ever again in your application! 
 
 ## Features
 - Automatically takes care of generating the Postgres function, and sets up columns to use the function as the default value
@@ -27,6 +29,7 @@ This scheme also allows for future-proofing in case your application requires sh
 pip install sqlalchemy-postgres-bigid
 ```
 
+### 1. Set up custom epoch time
 You will need to decide on some "epoch" time. Just choose some time that is earlier than any tables have been created in your system or your organization has been formed. I would choose something at the beginning of the year or something for simplicy. Then run `sqlalchemy_bigid.configure()` early in your application. You don't need to define it earlier than you need to, so you can maximize the number of usable years.
 
 This epoch time should be set and defined once, and never changed again.
@@ -37,6 +40,51 @@ BIGID_EPOCH_SECONDS = 1589674264    # this is 1/1/2020
 
 sqlalchemy_bigid.configure(epoch_seconds=BIGID_EPOCH_SECONDS)
 ```
+
+### 2. Register postgres functions
+Call `sqlalchemy_bigid.register_postgres_functions()` with your `Base.metadata`. A good place to do this is whereever you are doing your initial SQLAlchemy database setup and engine/session creation.
+```python
+from sqlalchemy_bigid import register_nextbigid_function
+
+Base = declarative_base()
+register_postgres_functions(metadata=Base.metadata)
+```
+
+Note that this really only matters when you are doing something like `Base.metadata.create_all(engine)`, which you likely will only do for local dev and testing
+
+### 3. Set up Alembic
+In your `alembic/env.py` file add these lines
+
+Somewhere at the top add this, we need this import just to make sure some code is registered
+```python
+from sqlalchemy_bigid import migration    # noqa make sure custom hooks are registered
+```
+
+Edit your `run_migrations_online()` function to something like this
+
+```
+def run_migrations_online():
+    """Run migrations in 'online' mode.
+
+    In this scenario we need to create an Engine
+    and associate a connection with the context.
+
+    """
+    from sqlalchemy_bigid.migration import writer
+    engine = get_engine()
+
+    with engine.connect() as connection:
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            process_revision_directives=writer,
+        )
+
+        with context.begin_transaction():
+            context.run_migrations()
+```
+
+That's it for the one-time setup!
 
 
 ## How it Works
@@ -64,8 +112,7 @@ The function itself takes one argument, which is the name of the sequence for yo
  """
 ```
 
-
-Your "initial" migration will have this at the top, which generates the "nextbigid" funciton via a custom Alembic hook
+Your "initial" migration will have this at the top, which generates the "nextbigid" function via a custom Alembic hook
 ```python
 def upgrade():
    op.create_nextbigid_function()
