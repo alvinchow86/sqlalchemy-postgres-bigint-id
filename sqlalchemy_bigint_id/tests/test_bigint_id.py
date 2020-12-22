@@ -41,7 +41,7 @@ def init_models(Foo):
     pass
 
 
-def test_get_bigid_column_from_table(Foo):
+def test_get_bigint_id_column_from_table(Foo):
     assert get_bigint_id_column_from_table(Foo.__table__) == Foo.id
 
 
@@ -53,7 +53,7 @@ def test_generate_next_bigint_id_sql(Foo, User):
     assert sql == """ALTER TABLE "user" ALTER COLUMN id set default next_bigint_id('user_id_seq')"""
 
 
-def test_register_bigid_function(Base, engine, connection):
+def test_register_bigint_id_function(Base, engine, connection):
     # Just test for coverage, what can we test for?
     register_next_bigint_id_function(metadata=Base.metadata)
     Base.metadata.create_all(engine)
@@ -93,7 +93,7 @@ def test_alembic_autogenerate_next_bigint_id(Foo, connection, Base, engine):
     assert isinstance(first_upgrade_op, CreateNextBigIntegerIdFunctionOp)
 
 
-def test_alembic_render_bigid_function_ops():
+def test_alembic_render_bigint_id_function_ops():
     upgrade_code = render_python_code(ops.UpgradeOps(ops=[CreateNextBigIntegerIdFunctionOp()]))
     downgrade_code = render_python_code(ops.DowngradeOps(ops=[DropNextBigIntegerIdFunctionOp()]))
     assert 'op.create_next_bigint_id_function()' in upgrade_code

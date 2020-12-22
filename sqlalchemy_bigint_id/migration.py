@@ -20,11 +20,11 @@ def create_table(context, revision, op):
     Check if there is a BigIntegerID column (BigInteger marked as needing next_bigint_id)
     and then emit the SQL migration to set the default
     """
-    bigid_id_column = get_bigint_id_column_from_table(op._orig_table)
+    bigint_id_column = get_bigint_id_column_from_table(op._orig_table)
 
-    if bigid_id_column is not None:
+    if bigint_id_column is not None:
         # Generate SQL to set default for the col to call next_bigint_id()
-        sql = generate_next_bigint_id_sql(op.table_name, bigid_id_column.key)
+        sql = generate_next_bigint_id_sql(op.table_name, bigint_id_column.key)
         next_bigint_id_op = ops.ExecuteSQLOp(sql)
         return [
             op,
