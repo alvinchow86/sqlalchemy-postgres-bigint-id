@@ -15,7 +15,7 @@ def main():
     use_coverage = args.coverage or args.coverage_html
 
     if use_coverage:
-        pytest_args.extend(['--cov', 'sqlalchemy_bigid'])
+        pytest_args.extend(['--cov', 'sqlalchemy_bigint_id'])
 
         if args.coverage_html:
             pytest_args.extend(['--cov-report', 'html', '--cov-report', 'term'])

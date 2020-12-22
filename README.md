@@ -1,8 +1,8 @@
-# SQLAlchemy-Postgres-BigID
+# SQLAlchemy Postgres BigInt IDs
 
 This is a library for making it easy to generate 64-bit BIGINT ids for Postgres tables in SQLAlchemy and Alembic. Note that this documentation is targeted for  SQLAlchemy ORM users, but it should also work for general usage. This library will dub this 64-big BIGINT type with special generation "BigID", as this is most likely to be useful for primary IDs.
 
-Install this library once, and never worry about running out of IDs or painful ID type migrations ever again in your application! 
+Install this library once, and never worry about running out of IDs or painful ID type migrations ever again in your application!
 
 This is a convenience layer - you could do this yourself manually in the Postgres shell, but it is a lot more reliable to let a library automate it.
 
@@ -28,11 +28,11 @@ This scheme also allows for future-proofing in case your application requires sh
 
 ## How to Use
 ```
-pip install sqlalchemy-postgres-bigid
+pip install sqlalchemy-postgres-bigint-ids
 ```
 
 ### 1. Set up custom epoch time
-You will need to decide on some "epoch" time. Just choose some time that is earlier than any tables have been created in your system or your organization has been formed. I would choose something at the beginning of the year or something for simplicy. Then run `sqlalchemy_bigid.configure()` early in your application. You don't need to define it earlier than you need to, so you can maximize the number of usable years.
+You will need to decide on some "epoch" time. Just choose some time that is earlier than any tables have been created in your system or your organization has been formed. I would choose something at the beginning of the year or something for simplicy. Then run `sqlalchemy_bigint_id.configure()` early in your application. You don't need to define it earlier than you need to, so you can maximize the number of usable years.
 
 This epoch time should be set and defined once, and never changed again.
 
@@ -40,13 +40,13 @@ Add this code something in your application initial setup.
 ```python
 BIGID_EPOCH_SECONDS = 1589674264    # this is 1/1/2020 <-- this is just a sample, choose your own time
 
-sqlalchemy_bigid.configure(epoch_seconds=BIGID_EPOCH_SECONDS)
+sqlalchemy_bigint_id.configure(epoch_seconds=BIGID_EPOCH_SECONDS)
 ```
 
 ### 2. Register postgres functions
-Call `sqlalchemy_bigid.register_postgres_functions()` with your `Base.metadata`. A good place to do this is whereever you are doing your initial SQLAlchemy database setup and engine/session creation.
+Call `sqlalchemy_bigint_id.register_postgres_functions()` with your `Base.metadata`. A good place to do this is whereever you are doing your initial SQLAlchemy database setup and engine/session creation.
 ```python
-from sqlalchemy_bigid import register_nextbigid_function
+from sqlalchemy_bigint_id import register_nextbigid_function
 
 Base = declarative_base()
 register_nextbigid_function(metadata=Base.metadata)
@@ -59,7 +59,7 @@ In your `alembic/env.py` file add these lines
 
 Somewhere at the top add this, we need this import just to make sure some code is registered
 ```python
-from sqlalchemy_bigid import migration    # noqa make sure custom hooks are registered
+from sqlalchemy_bigint_id import migration    # noqa make sure custom hooks are registered
 ```
 
 Edit your `run_migrations_online()` function to something like this
@@ -72,7 +72,7 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
-    from sqlalchemy_bigid.migration import writer
+    from sqlalchemy_bigint_id.migration import writer
     engine = get_engine()
 
     with engine.connect() as connection:
@@ -91,7 +91,7 @@ That's it for the one-time setup!
 Now in your SQLAlchemy ORM definitions, just use the custom BigID type. It is identical to the `BigInteger` type, but doing this allows this library to detect cases where you want to register it with the Big ID postgres generation function.
 
 ```
-from sqlalchemy_bigid.types import BigID
+from sqlalchemy_bigint_id.types import BigID
 
 class Foo(Base):
     __tablename__ = 'foo'
@@ -99,10 +99,10 @@ class Foo(Base):
     ...
 ```
 
-## How it Works 
-This section is optional reading, but worth looking at if you'd like to know what's going on underneath the hood. Ultimately it's not really that much, at the end of day it's purely a convenience layer. 
+## How it Works
+This section is optional reading, but worth looking at if you'd like to know what's going on underneath the hood. Ultimately it's not really that much, at the end of day it's purely a convenience layer.
 
-The library first create a Postgres function, called `nextbigid()`. It's generated in this Python script. Note that one hardcoded value is the epoch time, which must be set to something. 
+The library first create a Postgres function, called `nextbigid()`. It's generated in this Python script. Note that one hardcoded value is the epoch time, which must be set to something.
 
 The function itself takes one argument, which is the name of the sequence for your table. This is an improvement over the function in existing articles I've seen, in that we can reuse one Postgres function instead of writing a new one for every table.
 
@@ -137,7 +137,7 @@ For any new tables, the library adds a custom `op.execute()` statement that alte
 
 ```python
 def upgrade():
-   op.create_table('foo', 
+   op.create_table('foo',
      ...
    )
    op.execute("ALTER TABLE foo ALTER COLUMN id set default nextbigid('foo_id_seq')")
@@ -147,4 +147,4 @@ def upgrade():
 - Make the bit allocations customizable (right now I chose 10 bits for sequence, 10 bits for shard, and the rest for timestamp), which is similar to the Instagram scheme but with slight modification.
 - This library doesn't take into account sharding, right now it's intended more to bootstrap your tables with the possibility of future sharding. Will rethink this more later, but it's possible that by time you get to that point you may need to do things more manually.
 
-[![CircleCI](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigid.svg?style=svg)](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigid)
+[![CircleCI](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigint-ids.svg?style=svg)](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigint-ids)

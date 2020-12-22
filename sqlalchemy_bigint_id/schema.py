@@ -1,7 +1,7 @@
 from sqlalchemy import DDL, event
 
-from sqlalchemy_bigid.utils import get_bigid_column_from_table
-from sqlalchemy_bigid import config
+from sqlalchemy_bigint_id.utils import get_bigid_column_from_table
+from sqlalchemy_bigint_id import config
 
 
 RESERVED_KEYWORDS = (

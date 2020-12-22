@@ -2,8 +2,8 @@ from __future__ import with_statement
 
 from logging.config import fileConfig
 
-from sqlalchemy_bigid.testapp import db
-from sqlalchemy_bigid.migration import writer
+from sqlalchemy_bigint_id.testapp import db
+from sqlalchemy_bigint_id.migration import writer
 
 from alembic import context
 

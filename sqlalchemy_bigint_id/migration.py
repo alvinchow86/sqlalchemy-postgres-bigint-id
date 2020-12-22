@@ -7,8 +7,8 @@ from alembic.autogenerate import comparators, rewriter, renderers
 from alembic.operations import ops, Operations, MigrateOperation
 from sqlalchemy import DDL
 
-from sqlalchemy_bigid.utils import get_bigid_column_from_table
-from sqlalchemy_bigid.schema import generate_nextbigid_sql, get_nextbigid_function_text
+from sqlalchemy_bigint_id.utils import get_bigid_column_from_table
+from sqlalchemy_bigint_id.schema import generate_nextbigid_sql, get_nextbigid_function_text
 
 
 writer = rewriter.Rewriter()

@@ -9,4 +9,4 @@ Base = declarative_base()
 engine = create_engine(database_url)
 
 
-from sqlalchemy_bigid.testapp import models   # noqa
+from sqlalchemy_bigint_id.testapp import models   # noqa

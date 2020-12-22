@@ -1,4 +1,4 @@
-from sqlalchemy_bigid.types import BigID
+from sqlalchemy_bigint_id.types import BigID
 
 
 def get_bigid_column_from_table(table):

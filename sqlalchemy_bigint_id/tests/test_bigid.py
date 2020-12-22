@@ -8,12 +8,12 @@ from alembic.config import Config
 from alembic.migration import MigrationContext
 from alembic.operations import Operations, ops
 
-from sqlalchemy_bigid.schema import (
+from sqlalchemy_bigint_id.schema import (
     register_nextbigid_function, generate_nextbigid_sql_for_table, setup_bigid_for_all_tables
 )
-from sqlalchemy_bigid.migration import CreateNextBigIdFunctionOp, DropNextBigIdFunctionOp
-from sqlalchemy_bigid.utils import get_bigid_column_from_table
-from sqlalchemy_bigid.types import BigID
+from sqlalchemy_bigint_id.migration import CreateNextBigIdFunctionOp, DropNextBigIdFunctionOp
+from sqlalchemy_bigint_id.utils import get_bigid_column_from_table
+from sqlalchemy_bigint_id.types import BigID
 
 
 @pytest.fixture
@@ -83,7 +83,7 @@ def test_alembic_nextbigid_ops(engine):
 
 
 def test_alembic_autogenerate_nextbigid(Foo, connection, Base, engine):
-    from sqlalchemy_bigid import migration  # noqa
+    from sqlalchemy_bigint_id import migration  # noqa
 
     context = MigrationContext.configure(
         connection=connection,
@@ -101,7 +101,7 @@ def test_alembic_render_bigid_function_ops():
 
 
 def test_alembic_migration():
-    from sqlalchemy_bigid.testapp import db  # noqa
+    from sqlalchemy_bigint_id.testapp import db  # noqa
     config = Config("alembic.ini")
     result = command.revision(config, message='initial', autogenerate=True)
 

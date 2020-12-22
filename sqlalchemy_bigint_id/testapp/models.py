@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Text, Integer
 
-from sqlalchemy_bigid.testapp.db import Base
-from sqlalchemy_bigid.types import BigID
+from sqlalchemy_bigint_id.testapp.db import Base
+from sqlalchemy_bigint_id.types import BigID
 
 
 class Coin(Base):
