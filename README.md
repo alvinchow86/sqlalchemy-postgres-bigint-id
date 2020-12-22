@@ -4,9 +4,11 @@ This is a library for making it easy to generate 64-bit BIGINT ids for Postgres 
 
 Install this library once, and never worry about running out of IDs or painful ID type migrations ever again in your application! 
 
+This is a convenience/automation layer - you could easily do this yourself manually, but in my experience it is easy to forget or mistype.
+
 ## Features
 - Automatically takes care of generating the Postgres function, and sets up columns to use the function as the default value
-- Works with both SQLAlchemy table reset functions (for testing/development) and Alembic (migration files are edited to do all the necessary changes)
+- Works with both SQLAlchemy table reset functions (for testing/development) and Alembic (migration files are inserted with the appropriate commands to do all the necessary changes)
 - Fully tested with 100% unit test coverage
 
 ## Background
@@ -97,8 +99,10 @@ class Foo(Base):
     ...
 ```
 
-## How it Works
-We first create a Postgres function, called `nextbigid()`. It's generated in this Python script. Note that one hardcoded value is the epoch time, which must be set to something. 
+## How it Works 
+This section is optional reading, but worth looking at if you'd like to know what's going on underneath the hood. Ultimately it's not really that much, at the end of day it's purely a convenience layer. 
+
+The library first create a Postgres function, called `nextbigid()`. It's generated in this Python script. Note that one hardcoded value is the epoch time, which must be set to something. 
 
 The function itself takes one argument, which is the name of the sequence for your table. This is an improvement over the function in existing articles I've seen, in that we can reuse one Postgres function instead of writing a new one for every table.
 
