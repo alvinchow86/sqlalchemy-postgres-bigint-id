@@ -4,7 +4,7 @@ This is a library for making it easy to generate 64-bit BIGINT ids for Postgres 
 
 Install this library once, and never worry about running out of IDs or painful ID type migrations ever again in your application! 
 
-This is a convenience/automation layer - you could easily do this yourself manually, but in my experience it is easy to forget or mistype.
+This is a convenience layer - you could do this yourself manually in the Postgres shell, but it is a lot more reliable to let a library automate it.
 
 ## Features
 - Automatically takes care of generating the Postgres function, and sets up columns to use the function as the default value
@@ -12,7 +12,7 @@ This is a convenience/automation layer - you could easily do this yourself manua
 - Fully tested with 100% unit test coverage
 
 ## Background
-Instagram published an article on how they generate 64-bit database primary keys a while back (https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c). It is based on the Twitter Snowflake scheme, but without requiing a central server, instead we can just use Postgres functions.
+Instagram published a blog post on how they generate 64-bit database primary keys a while back (https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c). It is based on the Twitter Snowflake scheme, but without requiing a central server, instead we can just use Postgres functions.
 
 Here are the advantages of this over normal incrementing 32-bit IDs
 - Much larger namespace (you will not run out for many many years)
@@ -38,7 +38,7 @@ This epoch time should be set and defined once, and never changed again.
 
 Add this code something in your application initial setup.
 ```python
-BIGID_EPOCH_SECONDS = 1589674264    # this is 1/1/2020
+BIGID_EPOCH_SECONDS = 1589674264    # this is 1/1/2020 <-- this is just a sample, choose your own time
 
 sqlalchemy_bigid.configure(epoch_seconds=BIGID_EPOCH_SECONDS)
 ```
@@ -49,7 +49,7 @@ Call `sqlalchemy_bigid.register_postgres_functions()` with your `Base.metadata`.
 from sqlalchemy_bigid import register_nextbigid_function
 
 Base = declarative_base()
-register_postgres_functions(metadata=Base.metadata)
+register_nextbigid_function(metadata=Base.metadata)
 ```
 
 Note that this really only matters when you are doing something like `Base.metadata.create_all(engine)`, which you likely will only do for local dev and testing
