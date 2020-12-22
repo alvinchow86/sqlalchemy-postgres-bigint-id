@@ -1,4 +1,4 @@
-# SQLAlchemy Postgres Big Id
+# SQLAlchemy-Postgres-BigID
 
 This is a library for making it easy to generate 64-bit BIGINT ids for Postgres tables in SQLAlchemy and Alembic. Note that this documentation is targeted for  SQLAlchemy ORM users, but it should also work for general usage. This library will dub this 64-big BIGINT type with special generation "BigID", as this is most likely to be useful for primary IDs.
 
