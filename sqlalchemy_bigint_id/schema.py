@@ -76,7 +76,7 @@ ALTER TABLE "{table}" ALTER COLUMN {column} set default next_bigint_id('{table}_
     return sql
 
 
-def setup_bitint_id_for_all_tables(metadata):
+def setup_bigint_id_for_all_tables(metadata):
     """
     This is more for Base.create_all() usage than for migrations, but still important for that flow.
     Alembic migrations have a different flow
@@ -85,5 +85,5 @@ def setup_bitint_id_for_all_tables(metadata):
     for table in tables:
         next_bigint_id_sql = generate_next_bigint_id_sql_for_table(table)
         if next_bigint_id_sql:
-            alter_table_bitint_id = DDL(next_bigint_id_sql)
-            event.listen(table, 'after_create', alter_table_bitint_id)
+            alter_table_bigint_id = DDL(next_bigint_id_sql)
+            event.listen(table, 'after_create', alter_table_bigint_id)
