@@ -21,9 +21,28 @@ Advantages compared to 128-bit UUID
 
 This scheme also allows for future-proofing in case your application requires sharding later on, as some bits can be dedicated to the shard id.
 
+
 ## How to Use
 ```
 pip install sqlalchemy-postgres-bigid
+```
+
+## Hot it Works
+Your "initial" migration will have this at the top, which generates the "nextbigid" funciton via a custom Alembic hook
+```python
+def upgrade():
+   op.create_nextbigid_function()
+   ...
+```
+
+For any new tables, the library adds a custom `op.execute()` statement that alters the column to use the nextbigid() postgres function for thr default value.
+
+```python
+def upgrade():
+   op.create_table('address', 
+     ...
+   )
+   op.execute("ALTER TABLE address ALTER COLUMN id set default nextbigid('address_id_seq')")
 ```
 
 [![CircleCI](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigid.svg?style=svg)](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigid)
