@@ -27,6 +27,18 @@ This scheme also allows for future-proofing in case your application requires sh
 pip install sqlalchemy-postgres-bigid
 ```
 
+You will need to decide on some "epoch" time. Just choose some time that is earlier than any tables have been created in your system or your organization has been formed. I would choose something at the beginning of the year or something for simplicy. Then run `sqlalchemy_bigid.configure()` early in your application. You don't need to define it earlier than you need to, so you can maximize the number of usable years.
+
+This epoch time should be set and defined once, and never changed again.
+
+Add this code something in your application initial setup.
+```python
+BIGID_EPOCH_SECONDS = 1589674264    # this is 1/1/2020
+
+sqlalchemy_bigid.configure(epoch_seconds=BIGID_EPOCH_SECONDS)
+```
+
+
 ## How it Works
 We first create a Postgres function, called `nextbigid()`. It's generated in this Python script. Note that one hardcoded value is the epoch time, which must be set to something. 
 
