@@ -27,7 +27,32 @@ This scheme also allows for future-proofing in case your application requires sh
 pip install sqlalchemy-postgres-bigid
 ```
 
-## Hot it Works
+## How it Works
+We first create a Postgres function, called `nextbigid()`. It's generated in this Python script. Note that one hardcoded value is the epoch time, which must be set to something. 
+
+The function itself takes one argument, which is the name of the sequence for your table. This is an improvement over the function in existing articles I've seen, in that we can reuse one Postgres function instead of writing a new one for every table.
+
+```
+ create_nextbigid_function_text = f"""
+     CREATE OR REPLACE FUNCTION nextbigid(seq_name text, OUT result bigint) AS $$
+     DECLARE
+         our_epoch bigint := {epoch_milliseconds};
+         seq_id bigint;
+         now_millis bigint;
+         shard_id int := 0;
+     BEGIN
+         SELECT nextval(seq_name) %% 1024 INTO seq_id;
+
+         SELECT FLOOR(EXTRACT(EPOCH FROM clock_timestamp()) * 1000) INTO now_millis;
+         result := (now_millis - our_epoch) << 20;
+         result := result | (shard_id << 10);
+         result := result | (seq_id);
+     END;
+     $$ LANGUAGE PLPGSQL;
+ """
+```
+
+
 Your "initial" migration will have this at the top, which generates the "nextbigid" funciton via a custom Alembic hook
 ```python
 def upgrade():
@@ -44,5 +69,9 @@ def upgrade():
    )
    op.execute("ALTER TABLE address ALTER COLUMN id set default nextbigid('address_id_seq')")
 ```
+
+## Future Improvements
+- Make the bit allocations customizable (right now I chose 10 bits for sequence, 10 bits for shard, and the rest for timestamp), which is similar to the Instagram scheme but with slight modification.
+- This library doesn't take into account sharding, right now it's intended more to bootstrap your tables with the possibility of future sharding. Will rethink this more later, but it's possible that by time you get to that point you may need to do things more manually.
 
 [![CircleCI](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigid.svg?style=svg)](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigid)
