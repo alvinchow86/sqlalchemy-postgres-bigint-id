@@ -3,19 +3,19 @@ from setuptools import setup
 
 # get version
 __version__ = None
-exec(open('sqlalchemy_bigid/version.py').read())
+exec(open('sqlalchemy_bigint_id/version.py').read())
 
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    name='sqlalchemy-postgres-bigid',
+    name='sqlalchemy-postgres-bigint-id',
     version=__version__,
-    description="SQLAlchemy-Postgres-BigID",
+    description="SQLAlchemy-Postgres-BigInt-ID",
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/alvinchow86/sqlalchemy-postgres-bigid',
+    url='https://github.com/alvinchow86/sqlalchemy-postgres-bigint-id',
     author='Alvin Chow',
     author_email='alvinchow86@gmail.com',
     license="MIT",
@@ -25,7 +25,7 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     packages=[
-        'sqlalchemy_bigid',
+        'sqlalchemy_bigint_id',
     ],
     package_data={},
     scripts=[],
