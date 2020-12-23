@@ -28,7 +28,7 @@ This scheme also allows for future-proofing in case your application requires sh
 
 ## How to Use
 ```
-pip install sqlalchemy-postgres-bigint-ids
+pip install sqlalchemy-postgres-bigint-id
 ```
 
 ### 1. Set up custom epoch time
@@ -147,4 +147,4 @@ def upgrade():
 - Make the bit allocations customizable (right now I chose 10 bits for sequence, 10 bits for shard, and the rest for timestamp), which is similar to the Instagram scheme but with slight modification.
 - This library doesn't take into account sharding, right now it's intended more to bootstrap your tables with the possibility of future sharding. Will rethink this more later, but it's possible that by time you get to that point you may need to do things more manually.
 
-[![CircleCI](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigint-ids.svg?style=svg)](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigint-ids)
+[![CircleCI](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigint-id.svg?style=svg)](https://circleci.com/gh/alvinchow86/sqlalchemy-postgres-bigint-id)

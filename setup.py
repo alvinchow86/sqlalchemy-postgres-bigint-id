@@ -10,12 +10,12 @@ with open(path.join(this_directory, 'README.md')) as f:
     long_description = f.read()
 
 setup(
-    name='sqlalchemy-postgres-bigint-ids',
+    name='sqlalchemy-postgres-bigint-id',
     version=__version__,
-    description="SQLAlchemy-Postgres-BigInt-IDs",
+    description="SQLAlchemy-Postgres-BigInt-ID",
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/alvinchow86/sqlalchemy-postgres-bigint-ids',
+    url='https://github.com/alvinchow86/sqlalchemy-postgres-bigint-id',
     author='Alvin Chow',
     author_email='alvinchow86@gmail.com',
     license="MIT",
